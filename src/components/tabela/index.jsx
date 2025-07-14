@@ -62,25 +62,24 @@ export default function Tabela({ dados = [] }){
 
     // Funções para análise de dados
     const calcularDadosRelatorio = () => {
-        const itensFaturados = dados.filter(item => item.fatura && item.fatura.trim() !== '');
-        const itensNaoFaturados = dados.filter(item => !item.fatura || item.fatura.trim() === '');
+        // Considera faturado se fatura existe e não é traço
+        const itensFaturados = dados.filter(item => item.fatura && item.fatura !== '-');
+        const itensNaoFaturados = dados.filter(item => !item.fatura || item.fatura === '-');
         
         const valorFaturado = itensFaturados.reduce((total, item) => {
-            const valor = parseFloat(item.valorDocumento.replace('R$ ', '').replace(',', ''));
-            return total + valor;
+            return total + (item.valorDocumentoNumero || 0);
         }, 0);
         
         const valorNaoFaturado = itensNaoFaturados.reduce((total, item) => {
-            const valor = parseFloat(item.valorDocumento.replace('R$ ', '').replace(',', ''));
-            return total + valor;
+            return total + (item.valorDocumentoNumero || 0);
         }, 0);
         
         const totalDocumentos = dados.length;
         const totalFaturados = itensFaturados.length;
         const totalNaoFaturados = itensNaoFaturados.length;
         
-        const percentualFaturado = ((totalFaturados / totalDocumentos) * 100).toFixed(1);
-        const percentualNaoFaturado = ((totalNaoFaturados / totalDocumentos) * 100).toFixed(1);
+        const percentualFaturado = totalDocumentos > 0 ? ((totalFaturados / totalDocumentos) * 100).toFixed(1) : '0.0';
+        const percentualNaoFaturado = totalDocumentos > 0 ? ((totalNaoFaturados / totalDocumentos) * 100).toFixed(1) : '0.0';
         
         return {
             itensFaturados,
@@ -130,7 +129,6 @@ export default function Tabela({ dados = [] }){
                                     <th>Nota Fiscal</th>
                                     <th>Valor do Documento</th>
                                     <th>Valor de Desconto ou Acréscimo</th>
-                                    <th>Tipo Faturamento</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -146,8 +144,6 @@ export default function Tabela({ dados = [] }){
                                         <td>{item.notaFiscal}</td>
                                         <td>{item.valorDocumento}</td>
                                         <td>{item.valorDescontoAcrescimo}</td>
-                                        <td>{item.tipoFaturamento}</td>
-                                        
                                     </tr>
                                 ))}
                             </tbody>

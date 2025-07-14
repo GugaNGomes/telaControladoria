@@ -24,137 +24,82 @@ function App() {
   const [dadosFiltrados, setDadosFiltrados] = useState([]);
   const [carregando, setCarregando] = useState(false);
 
-  // Função para gerar dados fictícios
-  const gerarDadosFicticios = (quantidade) => {
-    const dados = [];
-    const clientes = [
-      "Empresa ABC Ltda", "Comércio Beta Ltda", "Distribuidora Delta", "Indústria Zeta S.A.",
-      "Comércio Theta Ltda", "Indústria Kappa S.A.", "Distribuidora Mu Ltda", "Comércio Xi Ltda",
-      "Indústria Pi S.A.", "Distribuidora Sigma Ltda", "Comércio Upsilon Ltda", "Indústria Chi S.A.",
-      "Logística Omega Ltda", "Transportes Alpha S.A.", "Frete Beta Ltda", "Cargas Gamma S.A.",
-      "Express Delta Ltda", "Rápido Epsilon S.A.", "Veloz Zeta Ltda", "Ágil Eta S.A."
-    ];
-    
-    const galpoes = [
-      "Galpão Central", "Galpão Norte", "Galpão Sul", "Galpão Leste", "Galpão Oeste",
-      "Galpão Principal", "Galpão Secundário", "Galpão de Distribuição", "Galpão de Armazenagem",
-      "Galpão Logístico", "Galpão Comercial", "Galpão Industrial", "Galpão Regional"
-    ];
-    
-    const solicitantes = [
-      "João Silva", "Maria Santos", "Pedro Costa", "Ana Oliveira", "Carlos Ferreira",
-      "Lucia Mendes", "Roberto Alves", "Fernanda Lima", "Marcelo Santos", "Patricia Costa",
-      "Ricardo Silva", "Camila Rodrigues", "André Pereira", "Juliana Almeida", "Rafael Souza",
-      "Carolina Martins", "Diego Oliveira", "Vanessa Costa", "Thiago Santos", "Amanda Lima"
-    ];
-
-    const tiposAberto = ["Venda", "Compra", "Transferência", "Devolução", "Ajuste"];
-    const tiposFaturamento = ["À Vista", "30 dias", "60 dias", "90 dias", "Boleto", "Cartão"];
-
-    // Obter ano e mês atual
-    const hoje = new Date();
-    const anoAtual = 2025; // Forçando para 2025
-    const mesAtual = hoje.getMonth(); // 0-11
-    const diaAtual = hoje.getDate();
-
-    for (let i = 1; i <= quantidade; i++) {
-      const clienteIndex = Math.floor(Math.random() * clientes.length);
-      const galpaoIndex = Math.floor(Math.random() * galpoes.length);
-      const solicitanteIndex = Math.floor(Math.random() * solicitantes.length);
-      const tipoAbertoIndex = Math.floor(Math.random() * tiposAberto.length);
-      const tipoFaturamentoIndex = Math.floor(Math.random() * tiposFaturamento.length);
-      
-      const valor = (Math.random() * 50000 + 1000).toFixed(2);
-      const descontoAcrescimo = (Math.random() * 1000 - 500).toFixed(2);
-      
-      // Gerar datas variadas: 60% do mês atual, 30% do mês anterior, 10% de outros meses
-      let data;
-      const random = Math.random();
-      
-      if (random < 0.6) {
-        // 60% dos dados do mês atual
-        const dia = Math.floor(Math.random() * diaAtual) + 1; // 1 até dia atual
-        data = new Date(anoAtual, mesAtual, dia);
-      } else if (random < 0.9) {
-        // 30% dos dados do mês anterior
-        const mesAnterior = mesAtual === 0 ? 11 : mesAtual - 1;
-        const anoMesAnterior = mesAtual === 0 ? anoAtual - 1 : anoAtual;
-        const diasNoMes = new Date(anoMesAnterior, mesAnterior + 1, 0).getDate();
-        const dia = Math.floor(Math.random() * diasNoMes) + 1;
-        data = new Date(anoMesAnterior, mesAnterior, dia);
-      } else {
-        // 10% dos dados de outros meses do ano atual
-        const mes = Math.floor(Math.random() * 12);
-        const diasNoMes = new Date(anoAtual, mes + 1, 0).getDate();
-        const dia = Math.floor(Math.random() * diasNoMes) + 1;
-        data = new Date(anoAtual, mes, dia);
-      }
-      
-      const dataFormatada = data.toISOString().split('T')[0];
-      
-      dados.push({
-        numeroDocumento: `DOC-${anoAtual}-${i.toString().padStart(3, '0')}`,
-        tipoAbertoPorLinha: tiposAberto[tipoAbertoIndex],
-        dataEmissaoDocumento: dataFormatada,
-        cliente: clientes[clienteIndex],
-        galpao: galpoes[galpaoIndex],
-        solicitante: solicitantes[solicitanteIndex],
-        fatura: Math.random() > 0.3 ? `FAT-${anoAtual}-${i.toString().padStart(3, '0')}` : '', // 30% sem fatura
-        notaFiscal: `NF-${anoAtual}-${i.toString().padStart(3, '0')}`,
-        valorDocumento: `R$ ${valor}`,
-        valorDescontoAcrescimo: descontoAcrescimo > 0 ? `+R$ ${descontoAcrescimo}` : `-R$ ${Math.abs(descontoAcrescimo)}`,
-        tipoFaturamento: tiposFaturamento[tipoFaturamentoIndex]
-      });
-    }
-    
-    return dados;
-  };
-
-  // Array com 100 dados fictícios
-  const dadosTabela = gerarDadosFicticios(100);
-
-  // Função para filtrar dados por período e número do documento
-  const filtrarDados = (dados, dataInicio, dataFim, numeroDocumento) => {
-    let dadosFiltrados = dados;
-    
-    // Filtro por período
-    if (dataInicio && dataFim) {
-      dadosFiltrados = dadosFiltrados.filter(item => {
-        const dataItem = new Date(item.dataEmissaoDocumento);
-        const inicio = new Date(dataInicio);
-        const fim = new Date(dataFim);
-        
-        return dataItem >= inicio && dataItem <= fim;
-      });
-    }
-    
-    // Filtro por número do documento
-    if (numeroDocumento && numeroDocumento.trim() !== '') {
-      dadosFiltrados = dadosFiltrados.filter(item => {
-        return item.numeroDocumento.toLowerCase().includes(numeroDocumento.toLowerCase());
-      });
-    }
-    
-    return dadosFiltrados;
-  };
-
-  // Função para buscar dados
-  const buscarDados = () => {
+  // Função para buscar dados reais na API
+  const buscarDados = async () => {
     setCarregando(true);
-    
-    // Simula carregamento
-    setTimeout(() => {
-      const dadosFiltrados = filtrarDados(
-        dadosTabela, 
-        filtros.dataInicio, 
-        filtros.dataFim,
-        filtros.numeroDocumento
-      );
-      
-      setDadosFiltrados(dadosFiltrados);
-      setCarregando(false);
-      console.log('Dados filtrados:', dadosFiltrados.length, 'registros');
-    }, 500);
+    try {
+      let response;
+      let data;
+      // Se o filtro de número do documento estiver preenchido, busca por documento
+      if (filtros.numeroDocumento && filtros.numeroDocumento.trim() !== '') {
+        const body = {
+          documentoCodigo: Number(filtros.numeroDocumento)
+        };
+        response = await fetch('http://localhost:62073/api/controladoria/ConsultarFaturamentoPorCodigoDocumento', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer OTQ1MDA2NDUxNDI2'
+          },
+          body: JSON.stringify(body)
+        });
+        if (!response.ok) {
+          throw new Error('Erro ao consultar por número do documento');
+        }
+        data = await response.json();
+        // Se a API retorna um único objeto, transforma em array
+        if (data && !Array.isArray(data)) {
+          data = [data];
+        }
+      } else {
+        // Busca por período
+        const body = {
+          dataInicio: filtros.dataInicio ? new Date(filtros.dataInicio).toISOString() : null,
+          dataFim: filtros.dataFim ? new Date(filtros.dataFim).toISOString() : null
+        };
+        response = await fetch('http://localhost:62073/api/controladoria/ConsultarFaturamentoPorPeriodo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer OTQ1MDA2NDUxNDI2'
+          },
+          body: JSON.stringify(body)
+        });
+        if (!response.ok) {
+          throw new Error('Erro ao consultar por período');
+        }
+        data = await response.json();
+      }
+      // Adapta os campos do retorno para o formato esperado pela tabela
+      const dadosAdaptados = Array.isArray(data) ? data.map(item => ({
+        numeroDocumento: item.numeroDocumento ? String(item.numeroDocumento) : '-',
+        tipoAbertoPorLinha: item.tipoAberto || '-',
+        dataEmissaoDocumento: item.dataEmissao ? item.dataEmissao.split('T')[0] : '-',
+        cliente: item.cliente || '-',
+        galpao: item.galpao || '-',
+        solicitante: item.usuarioSolicitante || '-',
+        fatura: item.nroFatura ? String(item.nroFatura) : '-',
+        notaFiscal: item.notafiscal ? String(item.notafiscal) : '-',
+        valorDocumento: typeof item.valorTotal === 'number'
+          ? `R$ ${item.valorTotal.toFixed(2)}`
+          : '-',
+        valorDocumentoNumero: typeof item.valorTotal === 'number'
+          ? item.valorTotal
+          : 0,
+        valorDescontoAcrescimo: typeof item.valorDescontoAcrescimo === 'number'
+          ? `R$ ${item.valorDescontoAcrescimo.toFixed(2)}`
+          : '-',
+        valorDescontoAcrescimoNumero: typeof item.valorDescontoAcrescimo === 'number'
+          ? item.valorDescontoAcrescimo
+          : 0,
+        tipoFaturamento: '-'
+      })) : [];
+      setDadosFiltrados(dadosAdaptados);
+    } catch (error) {
+      setDadosFiltrados([]);
+      alert('Erro ao buscar dados: ' + error.message);
+    }
+    setCarregando(false);
   };
 
   // Carrega dados automaticamente ao montar o componente
