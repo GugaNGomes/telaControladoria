@@ -219,7 +219,7 @@ function App() {
               onClick={buscarDados}
               disabled={carregando}
             >
-              {carregando ? '⏳ Buscando...' : '🔍 Filtrar'}
+              {carregando ? '⏳ Buscando...' : 'Filtrar'}
             </button>
           </div>
         </div>
