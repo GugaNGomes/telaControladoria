@@ -81,13 +81,13 @@ function App() {
         fatura: item.nroFatura ? String(item.nroFatura) : '-',
         notaFiscal: item.notafiscal ? String(item.notafiscal) : '-',
         valorDocumento: typeof item.valorTotal === 'number'
-          ? `R$ ${item.valorTotal.toFixed(2)}`
+          ? item.valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
           : '-',
         valorDocumentoNumero: typeof item.valorTotal === 'number'
           ? item.valorTotal
           : 0,
         valorDescontoAcrescimo: typeof item.valorDescontoAcrescimo === 'number'
-          ? `R$ ${item.valorDescontoAcrescimo.toFixed(2)}`
+          ? item.valorDescontoAcrescimo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
           : '-',
         valorDescontoAcrescimoNumero: typeof item.valorDescontoAcrescimo === 'number'
           ? item.valorDescontoAcrescimo

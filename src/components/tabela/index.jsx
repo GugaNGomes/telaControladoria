@@ -1,5 +1,5 @@
 import './index.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PainelProdutos from '../painel-produtos';
 import RelatorioControladoria from '../relatorio-controladoria';
 import visualizar from '../../assets/visualizar.png';
@@ -15,6 +15,11 @@ export default function Tabela({ dados = [] }){
     const [itemSelecionado, setItemSelecionado] = useState(null);
     const [visualizacaoAtiva, setVisualizacaoAtiva] = useState('grafico'); // 'tabela' ou 'grafico'
     
+    // Sempre volta para a primeira página ao mudar os dados (filtragem)
+    useEffect(() => {
+        setPaginaAtual(1);
+    }, [dados]);
+
     // Calcula o total de páginas
     const totalPaginas = Math.ceil(dados.length / itensPorPagina);
     
@@ -94,6 +99,26 @@ export default function Tabela({ dados = [] }){
         };
     };
 
+    // Função para gerar os números de página com reticências
+    const gerarNumerosPaginacao = () => {
+        const paginas = [];
+        if (totalPaginas <= 7) {
+            for (let i = 1; i <= totalPaginas; i++) {
+                paginas.push(i);
+            }
+        } else {
+            paginas.push(1);
+            if (paginaAtual > 4) paginas.push('...');
+            for (let i = Math.max(2, paginaAtual - 1); i <= Math.min(totalPaginas - 1, paginaAtual + 1); i++) {
+                if (i === 1 || i === totalPaginas) continue;
+                paginas.push(i);
+            }
+            if (paginaAtual < totalPaginas - 3) paginas.push('...');
+            paginas.push(totalPaginas);
+        }
+        return paginas;
+    };
+
     return(
         <div>
             {/* Botões de navegação */}
@@ -152,7 +177,7 @@ export default function Tabela({ dados = [] }){
                     
                     {/* Paginação - sempre mostra quando há dados */}
                     {dados.length > 0 && (
-                        <div className="paginacao">
+                        <div className="paginacao" style={{overflowX: 'auto', whiteSpace: 'nowrap'}}>
                             <div className="paginacao-esquerda">
                                 <div className="seletor-linhas">
                                     <div className="paginacao-info">
@@ -170,7 +195,6 @@ export default function Tabela({ dados = [] }){
                                     </select>
                                 </div>
                             </div>
-                            
                             <div className="paginacao-direita">
                                 {totalPaginas > 1 && (
                                     <div className="paginacao-controles">
@@ -181,20 +205,20 @@ export default function Tabela({ dados = [] }){
                                         >
                                             &lt;
                                         </button>
-                                        
-                                        {/* Números das páginas */}
+                                        {/* Números das páginas inteligentes */}
                                         <div className="numeros-pagina">
-                                            {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((pagina) => (
-                                                <button
-                                                    key={pagina}
-                                                    onClick={() => irParaPagina(pagina)}
-                                                    className={`btn-numero-pagina ${pagina === paginaAtual ? 'ativo' : ''}`}
-                                                >
-                                                    {pagina}
-                                                </button>
+                                            {gerarNumerosPaginacao().map((pagina, idx) => (
+                                                pagina === '...'
+                                                    ? <span key={idx} className="reticencias">...</span>
+                                                    : <button
+                                                        key={pagina}
+                                                        onClick={() => irParaPagina(pagina)}
+                                                        className={`btn-numero-pagina ${pagina === paginaAtual ? 'ativo' : ''}`}
+                                                    >
+                                                        {pagina}
+                                                    </button>
                                             ))}
                                         </div>
-                                        
                                         <button 
                                             onClick={proximaPagina} 
                                             disabled={paginaAtual === totalPaginas}
