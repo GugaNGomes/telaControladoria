@@ -1,0 +1,60 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.filtros-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    font-family: var(--font-principal, Arial, sans-serif);
+}
+
+.filtros-container input {
+    border: 1px solid #ccc;
+    color: gray;
+    border-radius: 0.5rem;
+    width: 100%;
+    height: 30px;
+    font-size: 13px;
+    padding: 0 10px;
+}
+
+.filtros-container input::-webkit-calendar-picker-indicator {
+    filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(200deg) brightness(104%) contrast(97%);
+    cursor: pointer;
+}
+
+.filtros-container input::-moz-calendar-picker-indicator {
+    filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(200deg) brightness(104%) contrast(97%);
+    cursor: pointer;
+}
+
+.filtros-title {
+    font-size: 12px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .filtros-container input {
+        height: 35px;
+        font-size: 14px;
+    }
+    
+    .filtros-title {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .filtros-container input {
+        height: 32px;
+        font-size: 13px;
+        padding: 0 8px;
+    }
+    
+    .filtros-title {
+        font-size: 12px;
+    }
+}

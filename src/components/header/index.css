@@ -1,0 +1,191 @@
+:root {
+  --color-princiapal: #0a2144;
+}
+
+.header {
+  margin: 1%;
+  border-radius: 10px;
+  background: var(--color-princiapal);
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  position: relative;
+}
+
+/* Container da marca d'água */
+.watermark-container {
+  position: absolute;
+  top: 50%;
+  left: 47%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Marca d'água */
+.watermark {
+  width: 223px;
+  height: auto;
+}
+
+/* Garantir que os elementos do header fiquem por cima da marca d'água */
+.logo-section,
+.user-section {
+  position: relative;
+  z-index: 2;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-profile-container {
+  position: relative;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.user-profile:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Dropdown do usuário */
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.2s ease;
+  z-index: 10;
+  min-width: 120px;
+}
+
+.user-profile-container:hover .user-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: none;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-radius: 8px;
+}
+
+.logout-button:hover {
+  background-color: #f5f5f5;
+}
+
+.logout-icon {
+  font-size: 16px;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #f59e0b, #ef4444);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.875rem;
+  color: white;
+}
+
+.user-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.dropdown-arrow {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .header {
+    padding: 0 1rem;
+    height: 60px;
+  }
+
+  .user-section {
+    gap: 0.5rem;
+  }
+
+  .user-profile {
+    padding: 0.25rem 0.75rem;
+  }
+  
+  .user-name {
+    display: none;
+  }
+  
+  .watermark {
+    width: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0 0.5rem;
+    height: 50px;
+  }
+  
+  .logo-text img {
+    width: 150px;
+  }
+  
+  .watermark {
+    width: 100px;
+  }
+  
+  .avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+}

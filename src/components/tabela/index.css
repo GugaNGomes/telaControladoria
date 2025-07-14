@@ -1,0 +1,350 @@
+:root{
+    --color-cinza-azulado: #374151;
+    --color-border: #D1D5DB;
+}
+
+/* Estilos da tabela */
+.tabela-container {
+    width: 100%;
+    overflow-x: auto;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+/* Esconde a barra de rolagem por padrão no WebKit */
+.tabela-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Mostra a barra de rolagem apenas quando há overflow */
+.tabela-container:hover::-webkit-scrollbar {
+    display: block;
+    height: 12px;
+}
+
+/* Estilização da barra de rolagem quando visível */
+.tabela-container:hover::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 6px;
+}
+
+.tabela-container:hover::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 6px;
+    border: 2px solid #f1f1f1;
+}
+
+.tabela-container:hover::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Para Firefox - barra de rolagem só aparece quando necessário */
+.tabela-container:hover {
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+.tabela-principal {
+    width: 100%;
+    min-width: 2000px;
+    border-collapse: collapse;
+    background-color: white;
+    border-bottom: 2.2px solid var(--color-border);
+    border-left: 2.2px solid var(--color-border);
+    border-right: 2.2px solid var(--color-border);
+}
+
+.tabela-header {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.tabela-header th {
+    padding: 12px 8px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-border);
+    font-weight: bold;
+    font-size: 11px;
+    color: #495057;
+    background-color: #F3F4F6;
+    white-space: nowrap;
+}
+
+/* Remove a borda direita da última coluna */
+.tabela-header th:last-child {
+    border-right: none;
+}
+
+/* Estilos para as células do corpo da tabela */
+.tabela-principal td {
+    padding: 12px 8px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-border);
+    font-size: 12px;
+    color: #495057;
+    white-space: nowrap;
+}
+
+/* Remove a borda direita da última coluna no corpo da tabela */
+.tabela-principal td:last-child {
+    border-right: none;
+}
+
+/* Estilos da paginação */
+.paginacao {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 0 2%;
+}
+
+.paginacao-esquerda {
+    display: flex;
+    align-items: center;
+}
+
+.paginacao-direita {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.seletor-linhas {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.select-itens {
+    padding: 6px 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #495057;
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.select-itens:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.select-itens:hover {
+    border-color: #adb5bd;
+}
+
+.paginacao-info {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.paginacao-controles {
+    display: flex;
+    align-items: center;
+}
+
+.btn-paginacao {
+    padding: 4px 10px;
+    border: none;
+    color: black;
+    border-radius: 50%;
+    background-color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-paginacao:hover:not(:disabled) {
+    background-color: #e9ecef;
+}
+
+.btn-paginacao:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.numeros-pagina {
+    display: flex;
+}
+
+.btn-numero-pagina {
+    padding: 8px 12px;
+    border: none;
+    background-color: #fff;
+    color: var(--color-cinza-azulado);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    min-width: 40px;
+    transition: all 0.2s ease;
+}
+
+.btn-numero-pagina:hover {
+    background-color: #e9ecef;
+}
+
+.btn-numero-pagina.ativo {
+    background-color: #477ABE1A;
+    color: #477ABE;
+}
+
+.btn-numero-pagina.ativo:hover {
+    background-color: #0056b3;
+}
+
+/* Botões de navegação */
+.botoes-navegacao {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 0 2%;
+}
+
+.btn-navegacao {
+    padding: 11px;
+    background-color: #F3F4F6;
+    color: #374151;
+    height: 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    border: none;
+    gap: 8px;
+}
+
+.btn-navegacao img {
+    width: 20px;
+    height: 20px;
+}
+
+.btn-navegacao:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(71, 122, 190, 0.3);
+}
+
+.btn-navegacao.ativo {
+    box-shadow: 0 4px 12px rgba(71, 122, 190, 0.3);
+}
+
+/* Container do gráfico */
+.grafico-container {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin: 0 2%;
+}
+
+/* Botão de produtos */
+.btn-produtos {
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 30px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-produtos:hover {
+    opacity: 0.8;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .botoes-navegacao {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    .btn-navegacao {
+        justify-content: center;
+        height: 40px;
+    }
+    
+    .paginacao {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+    
+    .paginacao-esquerda,
+    .paginacao-direita {
+        align-items: center;
+    }
+    
+    .seletor-linhas {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .numeros-pagina {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+    }
+    
+    .btn-numero-pagina {
+        min-width: 35px;
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+    
+    .grafico-container {
+        margin: 0 1%;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tabela-principal {
+        min-width: 1500px;
+    }
+    
+    .tabela-header th,
+    .tabela-principal td {
+        padding: 8px 6px;
+        font-size: 11px;
+    }
+    
+    .botoes-navegacao {
+        padding: 0 1%;
+    }
+    
+    .btn-navegacao {
+        font-size: 12px;
+        padding: 8px;
+    }
+    
+    .btn-navegacao img {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .paginacao {
+        padding: 0 1%;
+    }
+    
+    .paginacao-info {
+        font-size: 12px;
+    }
+    
+    .select-itens {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+}
+
