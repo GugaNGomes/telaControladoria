@@ -127,14 +127,14 @@ function App() {
         <div className="opcoes">
           <div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
             <img src={iconeVoltar} alt="Voltar" style={{width: '24px', height: '24px'}}/>
-            <b>Agendamento</b>
+            <b>Controladoria</b>
           </div>
           <div className="page-navigate">
             
             <img src={iconeCasa} alt="Casa" style={{width: '12px'}}/>
             <p>Home</p>
             <p>&gt;</p>
-            <p><b>Agendamento</b></p>
+            <p><b>Controladoria</b></p>
           </div>
         </div>
         <div className="filtros">
