@@ -22,11 +22,7 @@ function Header() {
         <div className="user-section">
           
           <div className="user-profile-container">
-            <a href="#" className="user-profile">
-              <div className="avatar">F</div>
-              <span className="user-name">Fabio Prado</span>
-              <span className="dropdown-arrow">▼</span>
-            </a>
+
             
             <div className="user-dropdown">
               <button className="logout-button">

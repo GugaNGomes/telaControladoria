@@ -4,7 +4,7 @@ function Filtros(props) {
   return (
     <div className="filtros-container">
       <b className="filtros-title">{props.title}</b>
-      <input type="date" placeholder="Selecione a data" className="filtros-input" {...props} />
+      <input type="date" className="filtros-input" {...props} />
     </div>
   );
 }
