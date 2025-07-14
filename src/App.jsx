@@ -51,6 +51,12 @@ function App() {
     const tiposAberto = ["Venda", "Compra", "Transferência", "Devolução", "Ajuste"];
     const tiposFaturamento = ["À Vista", "30 dias", "60 dias", "90 dias", "Boleto", "Cartão"];
 
+    // Obter ano e mês atual
+    const hoje = new Date();
+    const anoAtual = 2025; // Forçando para 2025
+    const mesAtual = hoje.getMonth(); // 0-11
+    const diaAtual = hoje.getDate();
+
     for (let i = 1; i <= quantidade; i++) {
       const clienteIndex = Math.floor(Math.random() * clientes.length);
       const galpaoIndex = Math.floor(Math.random() * galpoes.length);
@@ -60,18 +66,41 @@ function App() {
       
       const valor = (Math.random() * 50000 + 1000).toFixed(2);
       const descontoAcrescimo = (Math.random() * 1000 - 500).toFixed(2);
-      const data = new Date(2024, 0, Math.floor(Math.random() * 365) + 1);
+      
+      // Gerar datas variadas: 60% do mês atual, 30% do mês anterior, 10% de outros meses
+      let data;
+      const random = Math.random();
+      
+      if (random < 0.6) {
+        // 60% dos dados do mês atual
+        const dia = Math.floor(Math.random() * diaAtual) + 1; // 1 até dia atual
+        data = new Date(anoAtual, mesAtual, dia);
+      } else if (random < 0.9) {
+        // 30% dos dados do mês anterior
+        const mesAnterior = mesAtual === 0 ? 11 : mesAtual - 1;
+        const anoMesAnterior = mesAtual === 0 ? anoAtual - 1 : anoAtual;
+        const diasNoMes = new Date(anoMesAnterior, mesAnterior + 1, 0).getDate();
+        const dia = Math.floor(Math.random() * diasNoMes) + 1;
+        data = new Date(anoMesAnterior, mesAnterior, dia);
+      } else {
+        // 10% dos dados de outros meses do ano atual
+        const mes = Math.floor(Math.random() * 12);
+        const diasNoMes = new Date(anoAtual, mes + 1, 0).getDate();
+        const dia = Math.floor(Math.random() * diasNoMes) + 1;
+        data = new Date(anoAtual, mes, dia);
+      }
+      
       const dataFormatada = data.toISOString().split('T')[0];
       
       dados.push({
-        numeroDocumento: `DOC-2024-${i.toString().padStart(3, '0')}`,
+        numeroDocumento: `DOC-${anoAtual}-${i.toString().padStart(3, '0')}`,
         tipoAbertoPorLinha: tiposAberto[tipoAbertoIndex],
         dataEmissaoDocumento: dataFormatada,
         cliente: clientes[clienteIndex],
         galpao: galpoes[galpaoIndex],
         solicitante: solicitantes[solicitanteIndex],
-        fatura: Math.random() > 0.3 ? `FAT-2024-${i.toString().padStart(3, '0')}` : '', // 30% sem fatura
-        notaFiscal: `NF-2024-${i.toString().padStart(3, '0')}`,
+        fatura: Math.random() > 0.3 ? `FAT-${anoAtual}-${i.toString().padStart(3, '0')}` : '', // 30% sem fatura
+        notaFiscal: `NF-${anoAtual}-${i.toString().padStart(3, '0')}`,
         valorDocumento: `R$ ${valor}`,
         valorDescontoAcrescimo: descontoAcrescimo > 0 ? `+R$ ${descontoAcrescimo}` : `-R$ ${Math.abs(descontoAcrescimo)}`,
         tipoFaturamento: tiposFaturamento[tipoFaturamentoIndex]
@@ -84,17 +113,29 @@ function App() {
   // Array com 100 dados fictícios
   const dadosTabela = gerarDadosFicticios(100);
 
-  // Função para filtrar dados por período
-  const filtrarDadosPorPeriodo = (dados, dataInicio, dataFim) => {
-    if (!dataInicio || !dataFim) return dados;
+  // Função para filtrar dados por período e número do documento
+  const filtrarDados = (dados, dataInicio, dataFim, numeroDocumento) => {
+    let dadosFiltrados = dados;
     
-    return dados.filter(item => {
-      const dataItem = new Date(item.dataEmissaoDocumento);
-      const inicio = new Date(dataInicio);
-      const fim = new Date(dataFim);
-      
-      return dataItem >= inicio && dataItem <= fim;
-    });
+    // Filtro por período
+    if (dataInicio && dataFim) {
+      dadosFiltrados = dadosFiltrados.filter(item => {
+        const dataItem = new Date(item.dataEmissaoDocumento);
+        const inicio = new Date(dataInicio);
+        const fim = new Date(dataFim);
+        
+        return dataItem >= inicio && dataItem <= fim;
+      });
+    }
+    
+    // Filtro por número do documento
+    if (numeroDocumento && numeroDocumento.trim() !== '') {
+      dadosFiltrados = dadosFiltrados.filter(item => {
+        return item.numeroDocumento.toLowerCase().includes(numeroDocumento.toLowerCase());
+      });
+    }
+    
+    return dadosFiltrados;
   };
 
   // Função para buscar dados
@@ -103,10 +144,11 @@ function App() {
     
     // Simula carregamento
     setTimeout(() => {
-      const dadosFiltrados = filtrarDadosPorPeriodo(
+      const dadosFiltrados = filtrarDados(
         dadosTabela, 
         filtros.dataInicio, 
-        filtros.dataFim
+        filtros.dataFim,
+        filtros.numeroDocumento
       );
       
       setDadosFiltrados(dadosFiltrados);
@@ -151,12 +193,12 @@ function App() {
               value={filtros.dataFim}
               onChange={(e) => setFiltros({...filtros, dataFim: e.target.value})}
             />
-                <FiltrosInput 
+            <FiltrosInput 
               type="text" 
               title="Número do Documento" 
               placeholder="Número do documento"
-              value={filtros.cliente}
-              onChange={(e) => setFiltros({...filtros, cliente: e.target.value})}
+              value={filtros.numeroDocumento || ''}
+              onChange={(e) => setFiltros({...filtros, numeroDocumento: e.target.value})}
             />
           </div>
           <div style={{display: 'flex', gap: '1%', alignItems: 'center'}}>
@@ -177,7 +219,7 @@ function App() {
               onClick={buscarDados}
               disabled={carregando}
             >
-              {carregando ? '⏳ Buscando...' : ' Filtrar'}
+              {carregando ? '⏳ Buscando...' : '🔍 Filtrar'}
             </button>
           </div>
         </div>
