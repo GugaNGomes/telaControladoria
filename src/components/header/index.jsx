@@ -23,7 +23,7 @@ function Header() {
           
           <div className="user-profile-container">
             <a href="#" className="user-profile">
-              <div className="avatar">G</div>
+              <div className="avatar">F</div>
               <span className="user-name">Fabio Prado</span>
               <span className="dropdown-arrow">▼</span>
             </a>
