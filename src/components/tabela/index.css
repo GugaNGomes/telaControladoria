@@ -3,6 +3,9 @@
     --color-border: #D1D5DB;
 }
 
+body{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+}
 /* Estilos da tabela */
 .tabela-container {
     width: 100%;
@@ -125,7 +128,6 @@
 
 .select-itens {
     padding: 6px 10px;
-    border: 1px solid #dee2e6;
     border-radius: 4px;
     background-color: #fff;
     color: #495057;
@@ -235,10 +237,6 @@
     box-shadow: 0 4px 12px rgba(71, 122, 190, 0.3);
 }
 
-.btn-navegacao.ativo {
-    box-shadow: 0 4px 12px rgba(71, 122, 190, 0.3);
-}
-
 /* Container do gráfico */
 .grafico-container {
     padding: 20px;
@@ -260,6 +258,11 @@
 
 .btn-produtos:hover {
     opacity: 0.8;
+}
+.botoes-navegacao button{
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+    font-size: 12px;
 }
 
 /* Responsividade */

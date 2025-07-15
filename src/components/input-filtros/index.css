@@ -3,6 +3,9 @@
   padding: 0;
   box-sizing: border-box;
 }
+input:focus{
+    outline: 1px solid #477ABE;
+}
 
 .filtros-container {
     display: flex;

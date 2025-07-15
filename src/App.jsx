@@ -1,6 +1,5 @@
 import "./App.css";
 import Header from "./components/header/index.jsx";
-import FiltrosSelect from "./components/select-filtros/index.jsx";
 import Tabela from "./components/tabela/index.jsx";
 import FiltrosInput from "./components/input-filtros/index.jsx";
 import iconeVoltar from "./assets/voltar.png";
@@ -23,6 +22,7 @@ function App() {
   const [filtros, setFiltros] = useState(obterDatasUmMes());
   const [dadosFiltrados, setDadosFiltrados] = useState([]);
   const [carregando, setCarregando] = useState(false);
+  const [evolucaoAnual, setEvolucaoAnual] = useState([]);
 
   // Função para buscar dados reais na API
   const buscarDados = async () => {
@@ -102,28 +102,61 @@ function App() {
     setCarregando(false);
   };
 
+  // Função para buscar evolução anual do faturamento
+  const buscarEvolucaoAnual = async () => {
+    const anoAtual = new Date().getFullYear();
+    const dataInicio = `${anoAtual}-01-01`;
+    const dataFim = `${anoAtual}-12-31`;
+    try {
+      const body = {
+        dataInicio: new Date(dataInicio).toISOString(),
+        dataFim: new Date(dataFim).toISOString()
+      };
+      const response = await fetch('http://localhost:62073/api/controladoria/ConsultarFaturamentoPorPeriodo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer OTQ1MDA2NDUxNDI2'
+        },
+        body: JSON.stringify(body)
+      });
+      if (!response.ok) throw new Error('Erro ao consultar evolução anual');
+      const data = await response.json();
+      // Monta array de 12 meses com valor faturado por mês
+      const mesesAno = Array.from({length: 12}, (_, i) => {
+        const mesNum = (i+1).toString().padStart(2, '0');
+        return { mes: `${mesNum}/${anoAtual}`, valor: 0 };
+      });
+      data.forEach(item => {
+        if (item.dataEmissao && item.nroFatura && item.nroFatura !== '-') {
+          const [anoItem, mes] = item.dataEmissao.split('T')[0].split('-');
+          const idx = mesesAno.findIndex(m => m.mes === `${mes}/${anoItem}`);
+          if (idx !== -1) {
+            mesesAno[idx].valor += (item.valorTotal || 0) + (item.valorDescontoAcrescimo || 0);
+          }
+        }
+      });
+      setEvolucaoAnual(mesesAno);
+    } catch (error) {
+      setEvolucaoAnual([]);
+    }
+  };
+
   // Carrega dados automaticamente ao montar o componente
   useEffect(() => {
     buscarDados();
+  }, []);
+
+  // Carrega evolução anual ao montar
+  useEffect(() => {
+    buscarEvolucaoAnual();
   }, []);
 
   return (
     <div className="app-center">
       <Header />
       <div className="body-relatorio">
-        <div className="opcoes">
-          <div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-            <img src={iconeVoltar} alt="Voltar" style={{width: '24px', height: '24px'}}/>
-            <b>Controladoria</b>
-          </div>
-          <div className="page-navigate">
-            
-            <img src={iconeCasa} alt="Casa" style={{width: '12px'}}/>
-            <p>Home</p>
-            <p>&gt;</p>
-            <p><b>Controladoria</b></p>
-          </div>
-        </div>
+
         <div className="filtros">
           <div style={{display: 'flex', gap: '1%'}}>
             <FiltrosInput 
@@ -169,7 +202,7 @@ function App() {
           </div>
         </div>
         <div className="tabela">
-          <Tabela dados={dadosFiltrados} />
+          <Tabela dados={dadosFiltrados} evolucaoAnual={evolucaoAnual} />
         </div>
       </div>
     </div>

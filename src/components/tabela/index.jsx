@@ -49,7 +49,7 @@ const exportarParaExcel = (dados, nomeArquivo = 'relatorio') => {
 };
 
 
-export default function Tabela({ dados = [] }){
+export default function Tabela({ dados = [], evolucaoAnual = [] }){
     const [paginaAtual, setPaginaAtual] = useState(1);
     const [itensPorPagina, setItensPorPagina] = useState(10);
     const [painelProdutosAberto, setPainelProdutosAberto] = useState(false);
@@ -230,7 +230,7 @@ export default function Tabela({ dados = [] }){
                             borderRadius: '6px',
                             minWidth: '32px',
                             padding: '4px 8px',
-                            border: pagina === paginaAtual ? '2px solid #477ABE' : '1px solid #ccc',
+                            borderRadius: '50px',
                             background: pagina === paginaAtual ? '#477ABE' : '#fff',
                             color: pagina === paginaAtual ? '#fff' : '#333',
                             fontWeight: pagina === paginaAtual ? 'bold' : 'normal',
@@ -261,17 +261,19 @@ export default function Tabela({ dados = [] }){
         <div>
             {/* Botões de navegação */}
             <div className="botoes-navegacao">
+
                 <button 
                     className={`btn-navegacao ${visualizacaoAtiva === 'grafico' ? 'ativo' : ''}`}
                     onClick={() => setVisualizacaoAtiva('grafico')}
                 >
                     <img src={imgSinal} alt="Gráfico" style={{width: '12px', height: '12px'}}/> Gráfico
                 </button>
+                
                 <button 
                     className={`btn-navegacao ${visualizacaoAtiva === 'tabela' ? 'ativo' : ''}`}
                     onClick={() => setVisualizacaoAtiva('tabela')}
                 >
-                     <img src={imgColuna} style={{width: '11px', height: '12px'}} alt="Visualizar Colunas" /> Visualizar Colunas
+                     <img src={imgColuna} style={{width: '11px', height: '12px'}} alt="Visualizar Colunas" /> Colunas
                 </button>
             </div>
 
@@ -287,7 +289,7 @@ export default function Tabela({ dados = [] }){
                                         <div>
                                             <FiltrosInput
                                                 type='text'
-                                                style={{width: '70%'}}
+                                                style={{width:  '100%', height: '20px'}}
                                                 value={filtrosTabela.numeroDocumento || ''}
                                                 onChange={e => handleFiltroChange('numeroDocumento', e.target.value)}
                                             />
@@ -298,7 +300,7 @@ export default function Tabela({ dados = [] }){
                                         <div>
                                             <FiltrosInput
                                                 type='text'
-                                                style={{width: '70%'}}
+                                                style={{width:  '100%', height: '20px'}}
                                                 value={filtrosTabela.tipoAbertoPorLinha || ''}
                                                 onChange={e => handleFiltroChange('tipoAbertoPorLinha', e.target.value)}
                                             />
@@ -309,7 +311,7 @@ export default function Tabela({ dados = [] }){
                                         <div>
                                             <FiltrosInput
                                                 type='text'
-                                                style={{width: '70%'}}
+                                                style={{width:  '100%', height: '20px'}}
                                                 value={filtrosTabela.dataEmissaoDocumento || ''}
                                                 onChange={e => handleFiltroChange('dataEmissaoDocumento', e.target.value)}
                                             />
@@ -320,7 +322,7 @@ export default function Tabela({ dados = [] }){
                                         <div>
                                             <FiltrosInput
                                                 type='text'
-                                                style={{width: '70%'}}
+                                                style={{width:  '100%', height: '22px'}}
                                                 value={filtrosTabela.cliente || ''}
                                                 onChange={e => handleFiltroChange('cliente', e.target.value)}
                                             />
@@ -331,7 +333,7 @@ export default function Tabela({ dados = [] }){
                                         <div>
                                             <FiltrosInput
                                                 type='text'
-                                                style={{width: '70%'}}
+                                                style={{width:  '100%', height: '20px'}}
                                                 value={filtrosTabela.galpao || ''}
                                                 onChange={e => handleFiltroChange('galpao', e.target.value)}
                                             />
@@ -342,7 +344,7 @@ export default function Tabela({ dados = [] }){
                                         <div>
                                             <FiltrosInput
                                                 type='text'
-                                                style={{width: '70%'}}
+                                                style={{width:  '100%', height: '20px'}}
                                                 value={filtrosTabela.solicitante || ''}
                                                 onChange={e => handleFiltroChange('solicitante', e.target.value)}
                                             />
@@ -353,7 +355,7 @@ export default function Tabela({ dados = [] }){
                                         <div>
                                             <FiltrosInput
                                                 type='text'
-                                                style={{width: '70%'}}
+                                                style={{width:  '100%', height: '20px'}}
                                                 value={filtrosTabela.fatura || ''}
                                                 onChange={e => handleFiltroChange('fatura', e.target.value)}
                                             />
@@ -364,7 +366,7 @@ export default function Tabela({ dados = [] }){
                                         <div>
                                             <FiltrosInput
                                                 type='text'
-                                                style={{width: '70%'}}
+                                                style={{width:  '100%', height: '20px'}}
                                                 value={filtrosTabela.notaFiscal || ''}
                                                 onChange={e => handleFiltroChange('notaFiscal', e.target.value)}
                                             />
@@ -377,7 +379,7 @@ export default function Tabela({ dados = [] }){
                                         <div>
                                             <FiltrosInput
                                                 type='text'
-                                                style={{width: '70%'}}
+                                                style={{width:  '100%', height: '20px'}}
                                                 value={filtrosTabela.tipoFaturamento || ''}
                                                 onChange={e => handleFiltroChange('tipoFaturamento', e.target.value)}
                                             />
@@ -388,7 +390,7 @@ export default function Tabela({ dados = [] }){
                 <tbody>
                                 {dadosPaginaAtual.map((item, index) => (
                                     <tr key={inicio + index}>
-                                        <td>{item.numeroDocumento}</td>
+                                        <td style={{color: '#477ABE', fontWeight: 'bold'}}>{item.numeroDocumento}</td>
                                         <td>{item.tipoAbertoPorLinha}</td>
                                         <td>{item.dataEmissaoDocumento}</td>
                                         <td>{item.cliente}</td>
@@ -469,7 +471,7 @@ export default function Tabela({ dados = [] }){
             {/* Visualização do Gráfico */}
             {visualizacaoAtiva === 'grafico' && (
                 <div className="grafico-container">
-                    <RelatorioControladoria dados={calcularDadosRelatorio()} />
+                    <RelatorioControladoria dados={calcularDadosRelatorio()} evolucaoAnual={evolucaoAnual} />
                 </div>
             )}
 
