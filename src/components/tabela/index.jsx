@@ -372,6 +372,17 @@ export default function Tabela({ dados = [] }){
                                     </th>
                                     <th>Valor do Documento</th>
                                     <th>Valor de Desconto ou Acréscimo</th>
+                                    <th>
+                                        Tipo de Faturamento
+                                        <div>
+                                            <FiltrosInput
+                                                type='text'
+                                                style={{width: '70%'}}
+                                                value={filtrosTabela.tipoFaturamento || ''}
+                                                onChange={e => handleFiltroChange('tipoFaturamento', e.target.value)}
+                                            />
+                                        </div>
+                                    </th>
                                 </tr>
                 </thead>
                 <tbody>
@@ -387,6 +398,7 @@ export default function Tabela({ dados = [] }){
                                         <td>{item.notaFiscal}</td>
                                         <td>{item.valorDocumento}</td>
                                         <td>{item.valorDescontoAcrescimo}</td>
+                                        <td>{item.tipoFaturamento}</td>
                                     </tr>
                                 ))}
                 </tbody>

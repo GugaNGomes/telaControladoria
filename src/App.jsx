@@ -92,7 +92,7 @@ function App() {
         valorDescontoAcrescimoNumero: typeof item.valorDescontoAcrescimo === 'number'
           ? item.valorDescontoAcrescimo
           : 0,
-        tipoFaturamento: '-'
+        tipoFaturamento: item.tipoFaturamento || '-'
       })) : [];
       setDadosFiltrados(dadosAdaptados);
     } catch (error) {
