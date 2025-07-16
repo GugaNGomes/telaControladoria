@@ -112,7 +112,7 @@ function App() {
         dataInicio: new Date(dataInicio).toISOString(),
         dataFim: new Date(dataFim).toISOString()
       };
-      const response = await fetch('https://www.postallweb.com.br/api/controladoria/ConsultarFaturamentoPorPeriodo', {
+      const response = await fetch('https://www.postallweb.com.br/homolog/api/controladoria/ConsultarFaturamentoPorPeriodo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
