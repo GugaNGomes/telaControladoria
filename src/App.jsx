@@ -35,7 +35,7 @@ function App() {
         const body = {
           documentoCodigo: Number(filtros.numeroDocumento)
         };
-        response = await fetch('http://localhost:62073/api/controladoria/ConsultarFaturamentoPorCodigoDocumento', {
+        response = await fetch('https://www.postallweb.com.br/homolog/api/controladoria/ConsultarFaturamentoPorCodigoDocumento', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ function App() {
           dataInicio: filtros.dataInicio ? new Date(filtros.dataInicio).toISOString() : null,
           dataFim: filtros.dataFim ? new Date(filtros.dataFim).toISOString() : null
         };
-        response = await fetch('http://localhost:62073/api/controladoria/ConsultarFaturamentoPorPeriodo', {
+        response = await fetch('https://www.postallweb.com.br/homolog/api/controladoria/ConsultarFaturamentoPorPeriodo', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ function App() {
         dataInicio: new Date(dataInicio).toISOString(),
         dataFim: new Date(dataFim).toISOString()
       };
-      const response = await fetch('http://localhost:62073/api/controladoria/ConsultarFaturamentoPorPeriodo', {
+      const response = await fetch('https://www.postallweb.com.br/api/controladoria/ConsultarFaturamentoPorPeriodo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
