@@ -10,11 +10,17 @@ import FiltrosInput from '../../components/input-filtros/index.jsx';
 // Função para exportar dados filtrados
 const exportarParaExcel = (dados, nomeArquivo = 'relatorio') => {
     try {
-        // Remove as colunas que não devem ser exportadas
+        // Remove as colunas que não devem ser exportadas e remove o símbolo 'R$' dos valores
         const dadosExport = dados.map(row => {
             const copia = { ...row };
             delete copia.valorDocumentoNumero;
             delete copia.valorDescontoAcrescimoNumero;
+            // Remove 'R$' e espaços dos campos de valor
+            for (const key in copia) {
+                if (typeof copia[key] === 'string' && copia[key].includes('R$')) {
+                    copia[key] = copia[key].replace(/R\$\s?/g, '').replace(/\u00A0/g, '').trim();
+                }
+            }
             return copia;
         });
         // Tenta usar xlsx se disponível
@@ -28,7 +34,7 @@ const exportarParaExcel = (dados, nomeArquivo = 'relatorio') => {
             // Fallback para CSV
             const headers = Object.keys(dadosExport[0] || {});
             const csvContent = [
-                headers.join(','),
+                '\uFEFF' + headers.join(','), // Adiciona BOM UTF-8
                 ...dadosExport.map(row => headers.map(header => `"${row[header] || ''}"`).join(','))
             ].join('\n');
             
@@ -161,11 +167,11 @@ export default function Tabela({ dados = [], evolucaoAnual = [] }){
         
         // Dashboard: soma valorDocumentoNumero + valorDescontoAcrescimoNumero
         const valorFaturado = itensFaturados.reduce((total, item) => {
-            return total + (item.valorDocumentoNumero || 0) + (item.valorDescontoAcrescimoNumero || 0);
+            return total + ((item.valorDocumentoNumero || 0) + (item.valorDescontoAcrescimoNumero || 0));
         }, 0);
         
         const valorNaoFaturado = itensNaoFaturados.reduce((total, item) => {
-            return total + (item.valorDocumentoNumero || 0) + (item.valorDescontoAcrescimoNumero || 0);
+            return total + ((item.valorDocumentoNumero || 0) + (item.valorDescontoAcrescimoNumero || 0));
         }, 0);
         
         const totalDocumentos = dados.length;
