@@ -122,19 +122,25 @@ function App() {
       });
       if (!response.ok) throw new Error('Erro ao consultar evolução anual');
       const data = await response.json();
-      // Monta array de 12 meses com valor faturado por mês
+      // Monta array de 12 meses, somando os valores de cada mês
       const mesesAno = Array.from({length: 12}, (_, i) => {
         const mesNum = (i+1).toString().padStart(2, '0');
-        return { mes: `${mesNum}/${anoAtual}`, valor: 0 };
-      });
-      data.forEach(item => {
-        if (item.dataEmissao && item.nroFatura && item.nroFatura !== '-') {
-          const [anoItem, mes] = item.dataEmissao.split('T')[0].split('-');
-          const idx = mesesAno.findIndex(m => m.mes === `${mes}/${anoItem}`);
-          if (idx !== -1) {
-            mesesAno[idx].valor += (item.valorTotal || 0) + (item.valorDescontoAcrescimo || 0);
-          }
-        }
+        const valorMes = data
+          .filter(item => {
+            if (!item.dataEmissao) return false;
+            const [ano, mes] = item.dataEmissao.split('T')[0].split('-');
+            // Só considera se a fatura existe e não é traço
+            const faturaValida = item.nroFatura && item.nroFatura !== '-';
+            return ano === String(anoAtual) && mes === mesNum && faturaValida;
+          })
+          .reduce((soma, item) => {
+            const valorTotal = typeof item.valorTotal === 'number' ? item.valorTotal : 0;
+            return soma + valorTotal;
+          }, 0);
+        return {
+          mes: `${mesNum}/${anoAtual}`,
+          valor: valorMes
+        };
       });
       setEvolucaoAnual(mesesAno);
     } catch (error) {

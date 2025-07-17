@@ -167,11 +167,11 @@ export default function Tabela({ dados = [], evolucaoAnual = [] }){
         
         // Dashboard: soma valorDocumentoNumero + valorDescontoAcrescimoNumero
         const valorFaturado = itensFaturados.reduce((total, item) => {
-            return total + ((item.valorDocumentoNumero || 0) + (item.valorDescontoAcrescimoNumero || 0));
+            return total + (item.valorDocumentoNumero || 0);
         }, 0);
         
         const valorNaoFaturado = itensNaoFaturados.reduce((total, item) => {
-            return total + ((item.valorDocumentoNumero || 0) + (item.valorDescontoAcrescimoNumero || 0));
+            return total + (item.valorDocumentoNumero || 0);
         }, 0);
         
         const totalDocumentos = dados.length;
