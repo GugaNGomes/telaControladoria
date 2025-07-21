@@ -54,6 +54,13 @@ const exportarParaExcel = (dados, nomeArquivo = 'relatorio') => {
     }
 };
 
+function formatarData(data) {
+  if (!data || data === '-') return '-';
+  // Espera 'yyyy-MM-dd' ou 'yyyy-MM-ddTHH:mm:ss...'
+  const partes = data.split('T')[0].split('-');
+  if (partes.length !== 3) return data;
+  return `${partes[2]}-${partes[1]}-${partes[0]}`;
+}
 
 export default function Tabela({ dados = [], evolucaoAnual = [] }){
     const [paginaAtual, setPaginaAtual] = useState(1);
@@ -302,7 +309,7 @@ export default function Tabela({ dados = [], evolucaoAnual = [] }){
                                         </div>
                                     </th>
                                     <th>
-                                        Tipo Aberto por Linha
+                                        Sigla
                                         <div>
                                             <FiltrosInput
                                                 type='text'
@@ -398,7 +405,7 @@ export default function Tabela({ dados = [], evolucaoAnual = [] }){
                                     <tr key={inicio + index}>
                                         <td style={{color: '#477ABE', fontWeight: 'bold'}}>{item.numeroDocumento}</td>
                                         <td>{item.tipoAbertoPorLinha}</td>
-                                        <td>{item.dataEmissaoDocumento}</td>
+                                        <td>{formatarData(item.dataEmissaoDocumento)}</td>
                                         <td>{item.cliente}</td>
                                         <td>{item.galpao}</td>
                                         <td>{item.solicitante}</td>

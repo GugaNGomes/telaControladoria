@@ -8,6 +8,10 @@ import { useState, useEffect } from 'react';
 
 function App() {
   // Função para obter datas de 1 mês de diferença
+
+ const urlAPi = 'https://www.postallweb.com.br/homolog/api/controladoria/';
+  //const urlAPi = 'http://localhost:62073/api/controladoria/';
+  
   const obterDatasUmMes = () => {
     const hoje = new Date();
     const umMesAtras = new Date(hoje);
@@ -35,7 +39,7 @@ function App() {
         const body = {
           documentoCodigo: Number(filtros.numeroDocumento)
         };
-        response = await fetch('https://www.postallweb.com.br/homolog/api/controladoria/ConsultarFaturamentoPorCodigoDocumento', {
+        response = await fetch(`${urlAPi}ConsultarFaturamentoPorCodigoDocumento`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -57,7 +61,7 @@ function App() {
           dataInicio: filtros.dataInicio ? new Date(filtros.dataInicio).toISOString() : null,
           dataFim: filtros.dataFim ? new Date(filtros.dataFim).toISOString() : null
         };
-        response = await fetch('https://www.postallweb.com.br/homolog/api/controladoria/ConsultarFaturamentoPorPeriodo', {
+        response = await fetch(`${urlAPi}ConsultarFaturamentoPorPeriodo`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -112,7 +116,7 @@ function App() {
         dataInicio: new Date(dataInicio).toISOString(),
         dataFim: new Date(dataFim).toISOString()
       };
-      const response = await fetch('https://www.postallweb.com.br/homolog/api/controladoria/ConsultarFaturamentoPorPeriodo', {
+      const response = await fetch(`${urlAPi}/ConsultarFaturamentoPorPeriodo`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
