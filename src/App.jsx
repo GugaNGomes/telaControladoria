@@ -90,12 +90,6 @@ function App() {
         valorDocumentoNumero: typeof item.valorTotal === 'number'
           ? item.valorTotal
           : 0,
-        valorDescontoAcrescimo: typeof item.valorDescontoAcrescimo === 'number'
-          ? item.valorDescontoAcrescimo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-          : '-',
-        valorDescontoAcrescimoNumero: typeof item.valorDescontoAcrescimo === 'number'
-          ? item.valorDescontoAcrescimo
-          : 0,
         tipoFaturamento: item.tipoFaturamento || '-'
       })) : [];
       setDadosFiltrados(dadosAdaptados);

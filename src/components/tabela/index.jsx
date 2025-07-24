@@ -386,7 +386,6 @@ export default function Tabela({ dados = [], evolucaoAnual = [] }){
                                         </div>
                                     </th>
                                     <th>Valor do Documento</th>
-                                    <th>Valor de Desconto ou Acréscimo</th>
                                     <th>
                                         Tipo de Faturamento
                                         <div>
@@ -412,7 +411,6 @@ export default function Tabela({ dados = [], evolucaoAnual = [] }){
                                         <td>{item.fatura}</td>
                                         <td>{item.notaFiscal}</td>
                                         <td>{item.valorDocumento}</td>
-                                        <td>{item.valorDescontoAcrescimo}</td>
                                         <td>{item.tipoFaturamento}</td>
                                     </tr>
                                 ))}
