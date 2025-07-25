@@ -9,17 +9,16 @@ import { useState, useEffect } from 'react';
 function App() {
   // Função para obter datas de 1 mês de diferença
 
- //const urlAPi = 'https://www.postallweb.com.br/homolog/api/controladoria/';
- const urlAPi = 'http://localhost:62073/api/controladoria/';
+const urlAPi = 'https://www.postallweb.com.br/homolog/api/controladoria/';
+// const urlAPi = 'http://localhost:62073/api/controladoria/';
   
   const obterDatasUmMes = () => {
     const hoje = new Date();
-    const umMesAtras = new Date(hoje);
-    umMesAtras.setMonth(hoje.getMonth() - 1);
-    
+    const mesAtual = (hoje.getMonth() + 1).toString().padStart(2, '0');
+    const anoAtual = hoje.getFullYear();
     return {
-      dataInicio: umMesAtras.toISOString().split('T')[0].slice(0, 7),
-      dataFim: hoje.toISOString().split('T')[0].slice(0, 7),
+      dataInicio: `${anoAtual}-${mesAtual}`,
+      dataFim: `${anoAtual}-${mesAtual}`,
       numeroDocumento: ''
     };
   };
