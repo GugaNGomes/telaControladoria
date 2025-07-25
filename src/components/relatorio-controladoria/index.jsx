@@ -30,8 +30,10 @@ function RelatorioControladoria({ dados, evolucaoAnual }) {
         { name: 'Faturado', value: valorFaturado },
         { name: 'Pendente', value: valorNaoFaturado }
     ];
-    // O gráfico de evolução usa sempre evolucaoAnual
+    // Substituir o cálculo de dataLine para agrupar por competenciaComercial:
+    // Recebe a prop evolucaoAnual já agrupada por competenciaComercial, então só usa:
     const dataLine = evolucaoAnual || [];
+    // O eixo X do gráfico já é mes: dataLine[i].mes (que agora é competenciaComercial)
     const anoGrafico = dataLine.length > 0 ? dataLine[0].mes.split('/')[1] : new Date().getFullYear();
 
     return (

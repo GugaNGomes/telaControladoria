@@ -330,6 +330,16 @@ export default function Tabela({ dados = [], evolucaoAnual = [] }){
                                             />
                                         </div>
                                     </th>
+                                    <th>Competência Comercial
+                                        <div>
+                                            <FiltrosInput
+                                                type='text'
+                                                style={{width:  '100%', height: '20px'}}
+                                                value={filtrosTabela.competenciaComercial || ''}
+                                                onChange={e => handleFiltroChange('competenciaComercial', e.target.value)}
+                                            />
+                                        </div>
+                                    </th>
                                     <th>
                                         Cliente
                                         <div>
@@ -405,6 +415,7 @@ export default function Tabela({ dados = [], evolucaoAnual = [] }){
                                         <td style={{color: '#477ABE', fontWeight: 'bold'}}>{item.numeroDocumento}</td>
                                         <td>{item.tipoAbertoPorLinha}</td>
                                         <td>{formatarData(item.dataEmissaoDocumento)}</td>
+                                        <td>{item.competenciaComercial || '-'}</td>
                                         <td>{item.cliente}</td>
                                         <td>{item.galpao}</td>
                                         <td>{item.solicitante}</td>

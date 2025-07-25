@@ -9,8 +9,8 @@ import { useState, useEffect } from 'react';
 function App() {
   // Função para obter datas de 1 mês de diferença
 
- const urlAPi = 'https://www.postallweb.com.br/homolog/api/controladoria/';
-  //const urlAPi = 'http://localhost:62073/api/controladoria/';
+ //const urlAPi = 'https://www.postallweb.com.br/homolog/api/controladoria/';
+ const urlAPi = 'http://localhost:62073/api/controladoria/';
   
   const obterDatasUmMes = () => {
     const hoje = new Date();
@@ -18,11 +18,14 @@ function App() {
     umMesAtras.setMonth(hoje.getMonth() - 1);
     
     return {
-      dataInicio: umMesAtras.toISOString().split('T')[0],
-      dataFim: hoje.toISOString().split('T')[0]
+      dataInicio: umMesAtras.toISOString().split('T')[0].slice(0, 7),
+      dataFim: hoje.toISOString().split('T')[0].slice(0, 7),
+      numeroDocumento: ''
     };
   };
 
+  // Remover arrays de meses/anos e selects, voltar para o filtro com input type="month"
+  // Ajustar o estado dos filtros:
   const [filtros, setFiltros] = useState(obterDatasUmMes());
   const [dadosFiltrados, setDadosFiltrados] = useState([]);
   const [carregando, setCarregando] = useState(false);
@@ -57,9 +60,15 @@ function App() {
         }
       } else {
         // Busca por período
+        // No envio para a API, ajustar para montar datas completas:
+        const getUltimoDiaMes = (anoMes) => {
+          if (!anoMes) return null;
+          const [ano, mes] = anoMes.split('-');
+          return new Date(ano, mes, 0).toISOString();
+        };
         const body = {
-          dataInicio: filtros.dataInicio ? new Date(filtros.dataInicio).toISOString() : null,
-          dataFim: filtros.dataFim ? new Date(filtros.dataFim).toISOString() : null
+          dataInicio: filtros.dataInicio ? new Date(`${filtros.dataInicio}-01`).toISOString() : null,
+          dataFim: filtros.dataFim ? getUltimoDiaMes(filtros.dataFim) : null
         };
         response = await fetch(`${urlAPi}ConsultarFaturamentoPorPeriodo`, {
           method: 'POST',
@@ -79,6 +88,7 @@ function App() {
         numeroDocumento: item.numeroDocumento ? String(item.numeroDocumento) : '-',
         tipoAbertoPorLinha: item.tipoAberto || '-',
         dataEmissaoDocumento: item.dataEmissao ? item.dataEmissao.split('T')[0] : '-',
+        competenciaComercial: item.competenciaComercial || '-',
         cliente: item.cliente || '-',
         galpao: item.galpao || '-',
         solicitante: item.usuarioSolicitante || '-',
@@ -110,7 +120,7 @@ function App() {
         dataInicio: new Date(dataInicio).toISOString(),
         dataFim: new Date(dataFim).toISOString()
       };
-      const response = await fetch(`${urlAPi}/ConsultarFaturamentoPorPeriodo`, {
+      const response = await fetch(`${urlAPi}ConsultarFaturamentoPorPeriodo`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -120,23 +130,22 @@ function App() {
       });
       if (!response.ok) throw new Error('Erro ao consultar evolução anual');
       const data = await response.json();
-      // Monta array de 12 meses, somando os valores de cada mês
+      // Monta array de 12 competências do ano, somando os valores de cada mês
       const mesesAno = Array.from({length: 12}, (_, i) => {
         const mesNum = (i+1).toString().padStart(2, '0');
+        const competencia = `${mesNum}/${anoAtual}`;
         const valorMes = data
           .filter(item => {
-            if (!item.dataEmissao) return false;
-            const [ano, mes] = item.dataEmissao.split('T')[0].split('-');
-            // Só considera se a fatura existe e não é traço
+            // Só considera se a fatura existe e não é traço e competenciaComercial igual ao mês
             const faturaValida = item.nroFatura && item.nroFatura !== '-';
-            return ano === String(anoAtual) && mes === mesNum && faturaValida;
+            return faturaValida && item.competenciaComercial === competencia;
           })
           .reduce((soma, item) => {
             const valorTotal = typeof item.valorTotal === 'number' ? item.valorTotal : 0;
             return soma + valorTotal;
           }, 0);
         return {
-          mes: `${mesNum}/${anoAtual}`,
+          mes: competencia,
           valor: valorMes
         };
       });
@@ -164,14 +173,14 @@ function App() {
         <div className="filtros">
           <div style={{display: 'flex', gap: '1%'}}>
             <FiltrosInput 
-              type="date" 
-              title="Data Inicio:" 
+              type="month" 
+              title="Competência Inicial:" 
               value={filtros.dataInicio}
               onChange={(e) => setFiltros({...filtros, dataInicio: e.target.value})}
             />
             <FiltrosInput 
-              type="date" 
-              title="Data Fim:" 
+              type="month" 
+              title="Competência Final:" 
               value={filtros.dataFim}
               onChange={(e) => setFiltros({...filtros, dataFim: e.target.value})}
             />
