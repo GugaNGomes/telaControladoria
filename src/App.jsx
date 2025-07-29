@@ -137,7 +137,18 @@ const urlAPi = 'https://www.postallweb.com.br/homolog/api/controladoria/';
           .filter(item => {
             // Só considera se a fatura existe e não é traço e competenciaComercial igual ao mês
             const faturaValida = item.nroFatura && item.nroFatura !== '-';
-            return faturaValida && item.competenciaComercial === competencia;
+            if (!item.competenciaComercial) return false;
+            // Extrai ano e mês da competenciaComercial (formato data/hora)
+            let anoComp, mesComp;
+            if (/^\d{4}-\d{2}-\d{2}T/.test(item.competenciaComercial)) {
+              const partes = item.competenciaComercial.split('T')[0].split('-');
+              anoComp = partes[0];
+              mesComp = partes[1];
+            } else if (/^\d{2}\/\d{4}$/.test(item.competenciaComercial)) {
+              // Caso antigo MM/YYYY
+              [mesComp, anoComp] = item.competenciaComercial.split('/');
+            }
+            return faturaValida && anoComp === String(anoAtual) && mesComp === mesNum;
           })
           .reduce((soma, item) => {
             const valorTotal = typeof item.valorTotal === 'number' ? item.valorTotal : 0;
@@ -170,16 +181,16 @@ const urlAPi = 'https://www.postallweb.com.br/homolog/api/controladoria/';
       <div className="body-relatorio">
 
         <div className="filtros">
-          <div style={{display: 'flex', gap: '1%'}}>
+          <div style={{display: 'flex', width: '100%', gap: '2%'}}>
             <FiltrosInput 
               type="month" 
-              title="Competência Inicial:" 
+              title="Competência da Emissão do Documento Inicial:" 
               value={filtros.dataInicio}
               onChange={(e) => setFiltros({...filtros, dataInicio: e.target.value})}
             />
             <FiltrosInput 
               type="month" 
-              title="Competência Final:" 
+              title="Competência da Emissão do Documento Final:" 
               value={filtros.dataFim}
               onChange={(e) => setFiltros({...filtros, dataFim: e.target.value})}
             />

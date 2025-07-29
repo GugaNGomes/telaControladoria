@@ -62,6 +62,20 @@ function formatarData(data) {
   return `${partes[2]}-${partes[1]}-${partes[0]}`;
 }
 
+// Adicionar função utilitária para formatar competenciaComercial
+function formatarCompetenciaComercial(valor) {
+  if (!valor || valor === '-') return '-';
+  if (/^\d{4}-\d{2}-\d{2}T/.test(valor)) {
+    // Formato data/hora
+    const partes = valor.split('T')[0].split('-');
+    return `${partes[1]}/${partes[0]}`;
+  } else if (/^\d{2}\/\d{4}$/.test(valor)) {
+    // Formato MM/YYYY
+    return valor;
+  }
+  return valor;
+}
+
 export default function Tabela({ dados = [], evolucaoAnual = [] }){
     const [paginaAtual, setPaginaAtual] = useState(1);
     const [itensPorPagina, setItensPorPagina] = useState(10);
@@ -330,7 +344,7 @@ export default function Tabela({ dados = [], evolucaoAnual = [] }){
                                             />
                                         </div>
                                     </th>
-                                    <th>Competência Comercial
+                                    <th>Competência do Serviço
                                         <div>
                                             <FiltrosInput
                                                 type='text'
@@ -415,7 +429,7 @@ export default function Tabela({ dados = [], evolucaoAnual = [] }){
                                         <td style={{color: '#477ABE', fontWeight: 'bold'}}>{item.numeroDocumento}</td>
                                         <td>{item.tipoAbertoPorLinha}</td>
                                         <td>{formatarData(item.dataEmissaoDocumento)}</td>
-                                        <td>{item.competenciaComercial || '-'}</td>
+                                        <td>{formatarCompetenciaComercial(item.competenciaComercial)}</td>
                                         <td>{item.cliente}</td>
                                         <td>{item.galpao}</td>
                                         <td>{item.solicitante}</td>
