@@ -1,6 +1,7 @@
 import logoPostall from "../../assets/logoPostall.png";
 import mapaMundial from "../../assets/mapaMundial.png";
 import "./index.css";
+import { Button } from "kauak-gestor-design-system/dist/index.js";
 
 function Header() {
   return (
@@ -20,13 +21,12 @@ function Header() {
         </div>
 
         <div className="user-section">
-          
           <div className="user-profile-container">
-
-            
             <div className="user-dropdown">
               <button className="logout-button">
-                <span className="logout-icon" style={{color: '#477ABE'}}>X</span>
+                <span className="logout-icon" style={{ color: "#477ABE" }}>
+                  X
+                </span>
                 Sair da Conta
               </button>
             </div>

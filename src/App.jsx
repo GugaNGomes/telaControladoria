@@ -4,22 +4,23 @@ import Tabela from "./components/tabela/index.jsx";
 import FiltrosInput from "./components/input-filtros/index.jsx";
 import iconeVoltar from "./assets/voltar.png";
 import iconeCasa from "./assets/casinha.jpg";
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+import { Button } from "kauak-gestor-design-system/dist/index.js";
 
 function App() {
   // Função para obter datas de 1 mês de diferença
 
-const urlAPi = 'https://www.postallweb.com.br/homolog/api/controladoria/';
-// const urlAPi = 'http://localhost:62073/api/controladoria/';
-  
+  const urlAPi = "https://www.postallweb.com.br/homolog/api/controladoria/";
+  // const urlAPi = 'http://localhost:62073/api/controladoria/';
+
   const obterDatasUmMes = () => {
     const hoje = new Date();
-    const mesAtual = (hoje.getMonth() + 1).toString().padStart(2, '0');
+    const mesAtual = (hoje.getMonth() + 1).toString().padStart(2, "0");
     const anoAtual = hoje.getFullYear();
     return {
       dataInicio: `${anoAtual}-${mesAtual}`,
       dataFim: `${anoAtual}-${mesAtual}`,
-      numeroDocumento: ''
+      numeroDocumento: "",
     };
   };
 
@@ -37,20 +38,23 @@ const urlAPi = 'https://www.postallweb.com.br/homolog/api/controladoria/';
       let response;
       let data;
       // Se o filtro de número do documento estiver preenchido, busca por documento
-      if (filtros.numeroDocumento && filtros.numeroDocumento.trim() !== '') {
+      if (filtros.numeroDocumento && filtros.numeroDocumento.trim() !== "") {
         const body = {
-          documentoCodigo: Number(filtros.numeroDocumento)
+          documentoCodigo: Number(filtros.numeroDocumento),
         };
-        response = await fetch(`${urlAPi}ConsultarFaturamentoPorCodigoDocumento`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer OTQ1MDA2NDUxNDI2'
-          },
-          body: JSON.stringify(body)
-        });
+        response = await fetch(
+          `${urlAPi}ConsultarFaturamentoPorCodigoDocumento`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer OTQ1MDA2NDUxNDI2",
+            },
+            body: JSON.stringify(body),
+          }
+        );
         if (!response.ok) {
-          throw new Error('Erro ao consultar por número do documento');
+          throw new Error("Erro ao consultar por número do documento");
         }
         data = await response.json();
         // Se a API retorna um único objeto, transforma em array
@@ -62,49 +66,60 @@ const urlAPi = 'https://www.postallweb.com.br/homolog/api/controladoria/';
         // No envio para a API, ajustar para montar datas completas:
         const getUltimoDiaMes = (anoMes) => {
           if (!anoMes) return null;
-          const [ano, mes] = anoMes.split('-');
+          const [ano, mes] = anoMes.split("-");
           return new Date(ano, mes, 0).toISOString();
         };
         const body = {
-          dataInicio: filtros.dataInicio ? new Date(`${filtros.dataInicio}-01`).toISOString() : null,
-          dataFim: filtros.dataFim ? getUltimoDiaMes(filtros.dataFim) : null
+          dataInicio: filtros.dataInicio
+            ? new Date(`${filtros.dataInicio}-01`).toISOString()
+            : null,
+          dataFim: filtros.dataFim ? getUltimoDiaMes(filtros.dataFim) : null,
         };
         response = await fetch(`${urlAPi}ConsultarFaturamentoPorPeriodo`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer OTQ1MDA2NDUxNDI2'
+            "Content-Type": "application/json",
+            Authorization: "Bearer OTQ1MDA2NDUxNDI2",
           },
-          body: JSON.stringify(body)
+          body: JSON.stringify(body),
         });
         if (!response.ok) {
-          throw new Error('Erro ao consultar por período');
+          throw new Error("Erro ao consultar por período");
         }
         data = await response.json();
       }
       // Adapta os campos do retorno para o formato esperado pela tabela
-      const dadosAdaptados = Array.isArray(data) ? data.map(item => ({
-        numeroDocumento: item.numeroDocumento ? String(item.numeroDocumento) : '-',
-        tipoAbertoPorLinha: item.tipoAberto || '-',
-        dataEmissaoDocumento: item.dataEmissao ? item.dataEmissao.split('T')[0] : '-',
-        competenciaComercial: item.competenciaComercial || '-',
-        cliente: item.cliente || '-',
-        galpao: item.galpao || '-',
-        solicitante: item.usuarioSolicitante || '-',
-        fatura: item.nroFatura ? String(item.nroFatura) : '-',
-        notaFiscal: item.notafiscal ? String(item.notafiscal) : '-',
-        valorDocumento: typeof item.valorTotal === 'number'
-          ? item.valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-          : '-',
-        valorDocumentoNumero: typeof item.valorTotal === 'number'
-          ? item.valorTotal
-          : 0,
-        tipoFaturamento: item.tipoFaturamento || '-'
-      })) : [];
+      const dadosAdaptados = Array.isArray(data)
+        ? data.map((item) => ({
+            numeroDocumento: item.numeroDocumento
+              ? String(item.numeroDocumento)
+              : "-",
+            tipoAbertoPorLinha: item.tipoAberto || "-",
+            dataEmissaoDocumento: item.dataEmissao
+              ? item.dataEmissao.split("T")[0]
+              : "-",
+            competenciaComercial: item.competenciaComercial || "-",
+            cliente: item.cliente || "-",
+            galpao: item.galpao || "-",
+            solicitante: item.usuarioSolicitante || "-",
+            fatura: item.nroFatura ? String(item.nroFatura) : "-",
+            notaFiscal: item.notafiscal ? String(item.notafiscal) : "-",
+            valorDocumento:
+              typeof item.valorTotal === "number"
+                ? item.valorTotal.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })
+                : "-",
+            valorDocumentoNumero:
+              typeof item.valorTotal === "number" ? item.valorTotal : 0,
+            tipoFaturamento: item.tipoFaturamento || "-",
+          }))
+        : [];
       setDadosFiltrados(dadosAdaptados);
     } catch (error) {
       setDadosFiltrados([]);
-      alert('Erro ao buscar dados: ' + error.message);
+      alert("Erro ao buscar dados: " + error.message);
     }
     setCarregando(false);
   };
@@ -117,46 +132,49 @@ const urlAPi = 'https://www.postallweb.com.br/homolog/api/controladoria/';
     try {
       const body = {
         dataInicio: new Date(dataInicio).toISOString(),
-        dataFim: new Date(dataFim).toISOString()
+        dataFim: new Date(dataFim).toISOString(),
       };
       const response = await fetch(`${urlAPi}ConsultarFaturamentoPorPeriodo`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer OTQ1MDA2NDUxNDI2'
+          "Content-Type": "application/json",
+          Authorization: "Bearer OTQ1MDA2NDUxNDI2",
         },
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
       });
-      if (!response.ok) throw new Error('Erro ao consultar evolução anual');
+      if (!response.ok) throw new Error("Erro ao consultar evolução anual");
       const data = await response.json();
       // Monta array de 12 competências do ano, somando os valores de cada mês
-      const mesesAno = Array.from({length: 12}, (_, i) => {
-        const mesNum = (i+1).toString().padStart(2, '0');
+      const mesesAno = Array.from({ length: 12 }, (_, i) => {
+        const mesNum = (i + 1).toString().padStart(2, "0");
         const competencia = `${mesNum}/${anoAtual}`;
         const valorMes = data
-          .filter(item => {
+          .filter((item) => {
             // Só considera se a fatura existe e não é traço e competenciaComercial igual ao mês
-            const faturaValida = item.nroFatura && item.nroFatura !== '-';
+            const faturaValida = item.nroFatura && item.nroFatura !== "-";
             if (!item.competenciaComercial) return false;
             // Extrai ano e mês da competenciaComercial (formato data/hora)
             let anoComp, mesComp;
             if (/^\d{4}-\d{2}-\d{2}T/.test(item.competenciaComercial)) {
-              const partes = item.competenciaComercial.split('T')[0].split('-');
+              const partes = item.competenciaComercial.split("T")[0].split("-");
               anoComp = partes[0];
               mesComp = partes[1];
             } else if (/^\d{2}\/\d{4}$/.test(item.competenciaComercial)) {
               // Caso antigo MM/YYYY
-              [mesComp, anoComp] = item.competenciaComercial.split('/');
+              [mesComp, anoComp] = item.competenciaComercial.split("/");
             }
-            return faturaValida && anoComp === String(anoAtual) && mesComp === mesNum;
+            return (
+              faturaValida && anoComp === String(anoAtual) && mesComp === mesNum
+            );
           })
           .reduce((soma, item) => {
-            const valorTotal = typeof item.valorTotal === 'number' ? item.valorTotal : 0;
+            const valorTotal =
+              typeof item.valorTotal === "number" ? item.valorTotal : 0;
             return soma + valorTotal;
           }, 0);
         return {
           mes: competencia,
-          valor: valorMes
+          valor: valorMes,
         };
       });
       setEvolucaoAnual(mesesAno);
@@ -179,48 +197,53 @@ const urlAPi = 'https://www.postallweb.com.br/homolog/api/controladoria/';
     <div className="app-center">
       <Header />
       <div className="body-relatorio">
-
         <div className="filtros">
-          <div style={{display: 'flex', width: '100%', gap: '2%'}}>
-            <FiltrosInput 
-              type="month" 
-              title="Competência da Emissão do Documento Inicial:" 
+          <div style={{ display: "flex", width: "100%", gap: "2%" }}>
+            <FiltrosInput
+              type="month"
+              title="Competência da Emissão do Documento Inicial:"
               value={filtros.dataInicio}
-              onChange={(e) => setFiltros({...filtros, dataInicio: e.target.value})}
+              onChange={(e) =>
+                setFiltros({ ...filtros, dataInicio: e.target.value })
+              }
             />
-            <FiltrosInput 
-              type="month" 
-              title="Competência da Emissão do Documento Final:" 
+            <FiltrosInput
+              type="month"
+              title="Competência da Emissão do Documento Final:"
               value={filtros.dataFim}
-              onChange={(e) => setFiltros({...filtros, dataFim: e.target.value})}
+              onChange={(e) =>
+                setFiltros({ ...filtros, dataFim: e.target.value })
+              }
             />
-            <FiltrosInput 
-              type="text" 
-              title="Número do Documento" 
+            <FiltrosInput
+              type="text"
+              title="Número do Documento"
               placeholder="Número do documento"
-              value={filtros.numeroDocumento || ''}
-              onChange={(e) => setFiltros({...filtros, numeroDocumento: e.target.value})}
+              value={filtros.numeroDocumento || ""}
+              onChange={(e) =>
+                setFiltros({ ...filtros, numeroDocumento: e.target.value })
+              }
             />
           </div>
-          <div style={{display: 'flex', gap: '1%', alignItems: 'center'}}>
+          <div style={{ display: "flex", gap: "1%", alignItems: "center" }}>
             <span></span>
-            <button 
-              style={{ 
-                backgroundColor: '#477ABE', 
-                width: '120px', 
-                height: '35px', 
-                borderRadius:'10px', 
-                border: '1px solid #ccc', 
-                color: 'white', 
-                fontSize: '12px', 
-                fontWeight: 'bold', 
-                cursor: 'pointer',
-                opacity: carregando ? 0.6 : 1
+            <button
+              style={{
+                backgroundColor: "#477ABE",
+                width: "120px",
+                height: "35px",
+                borderRadius: "10px",
+                border: "1px solid #ccc",
+                color: "white",
+                fontSize: "12px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                opacity: carregando ? 0.6 : 1,
               }}
               onClick={buscarDados}
               disabled={carregando}
             >
-              {carregando ? '⏳ Buscando...' : 'Filtrar'}
+              {carregando ? "⏳ Buscando..." : "Filtrar"}
             </button>
           </div>
         </div>
