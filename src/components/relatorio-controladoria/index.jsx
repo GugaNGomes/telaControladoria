@@ -54,6 +54,12 @@ function RelatorioControladoria({ dados, evolucaoAnual }) {
                             <p className="card-valor">R$ {valorFaturado.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                         </div>
                     </div>
+                    <div className="card-quadrado">
+                        <div className="card-content">
+                            <h3>Valor Total</h3>
+                            <p className="card-valor">R$ {valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                        </div>
+                    </div>
                 </div>
                 {/* Gráfico de evolução à direita */}
                 <div className="grafico-evolucao" style={{background: '#fff', border: '1px solid #e5e7eb', borderRadius: 8, padding: 8, minWidth: 320, maxWidth: 700, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
